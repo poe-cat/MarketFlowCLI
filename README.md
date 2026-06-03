@@ -5,6 +5,20 @@ MarketFlow CLI to konsolowa aplikacja napisana w języku C#. Projekt symuluje pr
 
 ---
 
+## Uwagi
+
+Ten projekt nie jest próbą stworzenia realnej aplikacji inwestycyjnej. Przygotowałam go jako projekt akademicki, którego głównym celem jest pokazanie mechanizmów programowania obiektowego w praktycznym kontekście. Dlatego część rozwiązań uprościłam.
+
+Najważniejsze uproszczenia to brak połączenia z prawdziwą giełdą, brak bazy danych, brak trwałego zapisu portfela, uproszczony model transakcji oraz losowa symulacja cen. Program nie uwzględnia prowizji, podatków, spreadów, kursów walut ani rzeczywistego ryzyka inwestycyjnego. Ceny aktywów są zmieniane lokalnie, żeby można było pokazać działanie asynchroniczności, zdarzeń i reakcji systemu na zmianę stanu rynku.
+
+Interfejs ograniczyłam do konsoli, ponieważ celem projektu nie było tworzenie aplikacji okienkowej, tylko pokazanie struktury kodu i zależności między obiektami. Z tego samego powodu projekt jest podzielony na kilka modułów. Podział na `Model`, `Market`, `Commands`, `Strategy`, `Reports` i `Cli` ma pokazać separację odpowiedzialności.
+
+Refleksję, strategię ryzyka, komendy i zdarzenia wykorzystałam w ograniczonym zakresie. Każdy z tych elementów ma konkretne miejsce w działaniu programu: refleksja służy do technicznego opisu obiektów, strategie do oceny portfela, komendy do operacji kupna i sprzedaży, a zdarzenia do obsługi zmian cen.
+
+Projekt nie jest użyteczny w sensie komercyjnym. Jest to przykład tego, jak można zaprojektować większą strukturę obiektową wokół prostego problemu domenowego i jednocześnie pokazać mechanizmy języka C# w działającym programie.
+
+---
+
 ## Spis treści
 
 1. [Cel projektu](#cel-projektu)
@@ -418,7 +432,7 @@ To jest abstrakcja, ponieważ kod menu nie musi znać szczegółów kupowania. W
 
 ### Typy ogólne
 
-Typy ogólne, czyli generyki, pozwalają pisać kod działający dla różnych typów przy zachowaniu bezpieczeństwa typów.
+Typy ogólne pozwalają pisać kod działający dla różnych typów przy zachowaniu bezpieczeństwa typów.
 
 W projekcie przykładem jest:
 
@@ -551,7 +565,7 @@ _marketCancellation.Cancel();
 await _marketTask;
 ```
 
-Zmiany cen nie są wypisywane automatycznie w każdej sekundzie, ponieważ mieszałoby to tekst menu z komunikatami tła. Zamiast tego aplikacja zapisuje ostatnie zmiany do kolejki, a użytkownik może je zobaczyć przez opcję `13`.
+Zmiany cen nie są wypisywane automatycznie w każdej sekundzie, ponieważ powodowałoby to chaos w terminalu (mieszałoby tekst menu z komunikatami tła). Zamiast tego aplikacja zapisuje ostatnie zmiany do kolejki, a użytkownik może je zobaczyć przez opcję `13`.
 
 To pokazuje asynchroniczność: proces rynku działa w tle, a użytkownik nadal może korzystać z menu.
 
@@ -643,7 +657,7 @@ W projekcie służy do tworzenia aktywów:
 public static Asset Create(AssetType type, string symbol, string name, Money price)
 ```
 
-oraz aktywów demonstracyjnych:
+oraz aktywów demo:
 
 ```csharp
 public static IReadOnlyList<Asset> CreateDemoAssets()
@@ -701,7 +715,7 @@ Cechy `Money`:
 - przeciąża operatory arytmetyczne i porównania,
 - sprawdza zgodność walut.
 
-Dzięki temu operacje finansowe są czytelniejsze i bezpieczniejsze niż przy używaniu samego typu `decimal`.
+Dzięki temu operacje finansowe są bardziej czytelne i bezpieczne niż przy używaniu samego typu `decimal`.
 
 ---
 
@@ -853,7 +867,7 @@ Kończy działanie aplikacji. Przed zamknięciem program zatrzymuje symulację r
 5. Wybierz opcję `2`, aby sprawdzić stan portfela.
 6. Wybierz opcję `7`, aby ustawić alert cenowy.
 7. Wybierz opcję `9`, aby uruchomić symulację rynku.
-8. Odczekaj kilka sekund.
+8. Poczekaj kilka sekund.
 9. Wybierz opcję `13`, aby zobaczyć ostatnie zmiany cen.
 10. Wybierz opcję `10`, aby wygenerować raport portfela.
 11. Wybierz opcję `11`, aby zobaczyć demonstrację refleksji.
