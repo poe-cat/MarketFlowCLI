@@ -2,7 +2,8 @@ using MarketFlowCLI.Attributes;
 
 namespace MarketFlowCLI.Model;
 
-
+// Klasa bazowa dla wszystkich aktywów (akcje, krypto, ETF)
+// Implementuje IEntity (unikalny GUID), ITradable (symbol + cena) i IReportable (linia raportu)
 public abstract class Asset : IEntity, ITradable, IReportable
 {
 
@@ -33,14 +34,15 @@ public abstract class Asset : IEntity, ITradable, IReportable
         CurrentPrice = currentPrice;
     }
 
-   
+   // Aktualizuje bieżącą cenę - wywoływane przez MarketEngine przy każdym ticku
     public void UpdatePrice(Money newPrice)
     {
         if (newPrice.Amount <= 0) throw new ArgumentException("New price must be positive.");
         CurrentPrice = newPrice;
     }
 
-    
+
+    // Zwraca opis ryzyka specyficzny dla podtypu (Stock/Crypto/ETF)
     public abstract string GetRiskDescription();
 
     
