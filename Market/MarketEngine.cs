@@ -2,37 +2,35 @@ using MarketFlowCLI.Model;
 
 namespace MarketFlowCLI.Market;
 
-
-public sealed class MarketEngine
-{
+// Silnik rynku, zarządza listą aktywów i symuluje losowe zmiany cen
+public sealed class MarketEngine {
     
     private readonly List<Asset> _assets;
     private readonly Random _random = new();
     private bool _isRunning;
 
-    
+
+    // Zdarzenie wywoływane po każdej zmianie ceny - subskrybują ConsoleApp i PriceAlert
     public event MarketPriceChangedHandler? PriceChanged;
 
     public IReadOnlyList<Asset> Assets => _assets.AsReadOnly();
     public bool IsRunning => _isRunning;
 
     
-    public MarketEngine(IEnumerable<Asset> assets)
-    {
+    public MarketEngine(IEnumerable<Asset> assets) {
         _assets = assets.ToList();
     }
 
     
-    public Asset? FindAsset(string symbol)
-    {
+    // Szuka aktywa po symbolu; zwraca null jeśli nie znaleziono
+    public Asset? FindAsset(string symbol) {
         return _assets.FirstOrDefault(asset => asset.Symbol.Equals(symbol, StringComparison.OrdinalIgnoreCase));
     }
 
-    
-    public async Task StartAsync(CancellationToken cancellationToken)
-    {
-        if (_isRunning)
-        {
+    // Uruchamia asynchroniczną pętlę symulacji, aktualizuje ceny co 3 sekundy.
+    // Pętla zatrzymuje się przez CancellationToken (opcja 9. w menu)
+    public async Task StartAsync(CancellationToken cancellationToken) {
+        if (_isRunning) {
             return;
         }
 
@@ -56,7 +54,8 @@ public sealed class MarketEngine
         }
     }
 
-    
+
+    // Losuje zmianę ceny dla każdego aktywa: zmienność zależy od typu (Crypto > Stock > ETF)
     public void UpdateRandomPrices()
     {
         foreach (var asset in _assets)
