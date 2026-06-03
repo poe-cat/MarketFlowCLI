@@ -4,6 +4,7 @@ using MarketFlowCLI.Attributes;
 namespace MarketFlowCLI.Reports;
 
 
+// Narzędzie do opisu obiektów przez refleksję: wypisuje właściwości oznaczone [ReportField]
 public static class ReflectionPrinter
 {
 
