@@ -3,7 +3,7 @@ using MarketFlowCLI.Attributes;
 
 namespace MarketFlowCLI.Model;
 
-
+// Value object reprezentujący kwotę pieniężną z walutą
 public readonly struct Money : IComparable<Money>, IEquatable<Money>
 {
 
@@ -28,10 +28,12 @@ public readonly struct Money : IComparable<Money>, IEquatable<Money>
         Currency = currency.ToUpperInvariant();
     }
 
-    
+
+    // Fabryka: tworzy Money w domyślnej walucie PLN
     public static Money From(decimal amount) => new(amount, DefaultCurrency);
 
-    
+
+    // Parsuje string z kwotą (przecinek lub kropka dziesiętna)
     public static Money Parse(string input)
     {
         if (!decimal.TryParse(input.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out var amount))
@@ -42,7 +44,7 @@ public readonly struct Money : IComparable<Money>, IEquatable<Money>
         return From(amount);
     }
 
-    
+    // Operatory arytmetyczne: rzucają wyjątek przy mieszaniu walut
     public static Money operator +(Money left, Money right)
     {
         EnsureSameCurrency(left, right);
