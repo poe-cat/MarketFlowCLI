@@ -3,16 +3,16 @@ using MarketFlowCLI.Model;
 namespace MarketFlowCLI.Repository;
 
 
-public class Repository<T> where T : IEntity
-{
+// Generyczne repozytorium; przechowuje encje po GUID
+public class Repository<T> where T : IEntity {
 
+    
     private readonly Dictionary<Guid, T> _items = new();
 
     public int Count => _items.Count;
 
 
-    public void Add(T item)
-    {
+    public void Add(T item) {
         _items[item.Id] = item;
     }
 
