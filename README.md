@@ -44,9 +44,9 @@ Celem projektu jest implementacja terminalowego systemu zarządzania portfelem i
 4. Elementy statyczne
 5. Dziedziczenie
 6. Polimorfizm
-7. Interfejsy / abstrakcja
-8. Typy ogólne / kolekcje
-9. Delegacje / zdarzenia
+7. Interfejsy/abstrakcja
+8. Typy ogólne/kolekcje
+9. Delegacje/zdarzenia
 10. Przeciążanie operatorów
 11. Programowanie asynchroniczne
 12. Refleksja
