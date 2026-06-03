@@ -10,12 +10,15 @@ using MarketFlowCLI.Util;
 namespace MarketFlowCLI.Cli;
 
 
+// Główna aplikacja konsolowa. Obsługuje pętlę menu i deleguje akcje do odpowiednich klas
 public sealed class ConsoleApp
 {
     private readonly MarketEngine _market;
     private readonly Portfolio _portfolio;
     private readonly List<PriceAlert> _alerts = new();
     private IRiskStrategy _riskStrategy = new BalancedRiskStrategy();
+
+    // Token i task do zarządzania asynchroniczną symulacją rynku (opcja 9)
     private CancellationTokenSource? _marketCancellation;
     private Task? _marketTask;
 
@@ -26,10 +29,12 @@ public sealed class ConsoleApp
         _market = new MarketEngine(AssetFactory.CreateDemoAssets());
         _portfolio = new Portfolio(new Investor("Student", "Balanced"), Money.From(10000m));
 
+        // Subskrypcja zdarzenia - wyświetla zmiany cen w trakcie symulacji
         _market.PriceChanged += ShowMarketPriceChange;
     }
 
 
+    // Główna pętla aplikacji: czyta wybór z konsoli i wywołuje odpowiednią metodę
     public async Task RunAsync()
     {
         Console.Title = "MarketFlow CLI";
@@ -108,6 +113,8 @@ public sealed class ConsoleApp
         }
     }
 
+    
+    // Handler zdarzenia PriceChanged
     private void ShowMarketPriceChange(object? sender, PriceChangedEventArgs e)
     {
         if (!_market.IsRunning)
@@ -151,6 +158,7 @@ public sealed class ConsoleApp
     }
 
 
+    // Tworzy i wykonuje komendę BuyAssetCommand (wzorzec Command)
     private void ExecuteBuy()
     {
         var asset = ReadAssetBySymbol();
@@ -161,6 +169,7 @@ public sealed class ConsoleApp
     }
 
 
+    // Tworzy i wykonuje komendę SellAssetCommand (wzorzec Command)
     private void ExecuteSell()
     {
         var asset = ReadAssetBySymbol();
@@ -218,6 +227,7 @@ public sealed class ConsoleApp
     }
 
 
+    // Przełącza symulację rynku: start lub stop w zależności od bieżącego stanu
     private async Task ToggleMarketSimulationAsync()
     {
         if (_market.IsRunning)
@@ -276,6 +286,7 @@ public sealed class ConsoleApp
     }
 
 
+    // Zmienia aktywną strategię ryzyka (wzorzec proj Strategy) i aktualizuje profil inwestora
     private void ChangeRiskStrategy()
     {
         Console.WriteLine("Wybierz strategię:");
@@ -299,6 +310,7 @@ public sealed class ConsoleApp
     }
 
 
+    // Wczytuje symbol z konsoli i wyszukuje aktywa, wrzuca wyjątek jeśli nie istnieje
     private Asset ReadAssetBySymbol()
     {
 
