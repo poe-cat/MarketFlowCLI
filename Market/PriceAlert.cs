@@ -3,6 +3,7 @@ using MarketFlowCLI.Model;
 namespace MarketFlowCLI.Market;
 
 
+// Alert cenowy, jednorazowo powiadamia gdy cena aktywa przekroczy (lub spadnie poniżej) progu
 public sealed class PriceAlert
 {
 
@@ -20,6 +21,7 @@ public sealed class PriceAlert
     }
 
     
+    // Handler podpinany pod MarketEngine.PriceChanged - sprawdza warunek i wyswietla komunikat
     public void HandlePriceChanged(object? sender, PriceChangedEventArgs args)
     {
         if (IsTriggered || args.Asset.Symbol != Symbol)
