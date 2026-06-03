@@ -188,7 +188,7 @@ Najważniejsze obiekty domenowe:
 
 ---
 
-# Omówienie wymagań z programowania obiektowego
+# Omówienie mechanizmów OOP
 
 ## 1. Klasy
 
