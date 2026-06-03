@@ -2,10 +2,11 @@ using MarketFlowCLI.Attributes;
 
 namespace MarketFlowCLI.Model;
 
-
+// Portfel inwestora przechowuje gotówkę, pozycje i historię transakcji
 public sealed class Portfolio : IEntity, IReportable
 {
 
+    // Pozycje indeksowane po symbolu; transakcje w kolejności chronologicznej
     private readonly Dictionary<string, Position> _positions = new();
     private readonly List<Transaction> _transactions = new();
 
@@ -22,26 +23,26 @@ public sealed class Portfolio : IEntity, IReportable
     
     public IReadOnlyCollection<Position> Positions => _positions.Values;
     public IReadOnlyList<Transaction> Transactions => _transactions;
+
+    // Łączna wartość wszystkich otwartych pozycji (wg bieżących cen)
     public Money PositionsValue => Positions.Aggregate(Money.Zero, (sum, position) => sum + position.Value);
     public Money TotalValue => Cash + PositionsValue;
-
     
+
+    // Indeksator po symbolu (null jeśli brak) i po indeksie numerycznym
     public Position? this[string symbol] => _positions.TryGetValue(symbol.ToUpperInvariant(), out var position) ? position : null;
     public Position this[int index] => _positions.Values.ElementAt(index);
 
     
-    public Portfolio(Investor owner) : this(owner, Money.Zero)
-    {
-    }
+    public Portfolio(Investor owner) : this(owner, Money.Zero){ }
 
     
-    public Portfolio(Investor owner, Money initialCash)
-    {
+    public Portfolio(Investor owner, Money initialCash) {
         Owner = owner;
         Cash = initialCash;
     }
 
-    
+    // Wpłata gotówki, rejestruje transakcję typu Deposit
     public void Deposit(Money amount)
     {
         if (amount.Amount <= 0) throw new ArgumentException("Deposit must be positive.");
@@ -49,7 +50,7 @@ public sealed class Portfolio : IEntity, IReportable
         _transactions.Add(new Transaction(TransactionType.Deposit, "CASH", 1, amount));
     }
 
-    
+    // Zakup aktywów, pobiera koszt z gotówki, zwiększa lub tworzy pozycję
     public void Buy(Asset asset, int quantity)
     {
         ValidateQuantity(quantity);
@@ -70,7 +71,8 @@ public sealed class Portfolio : IEntity, IReportable
         _transactions.Add(new Transaction(TransactionType.Buy, asset.Symbol, quantity, asset.CurrentPrice));
     }
 
-    
+
+    // Sprzedaż aktywów, zmniejsza pozycję, usuwa ją gdy wyzerowana
     public void Sell(Asset asset, int quantity)
     {
         ValidateQuantity(quantity);
@@ -93,8 +95,7 @@ public sealed class Portfolio : IEntity, IReportable
     public string ToReportLine() => $"Portfel: {Owner.Name}, gotówka: {Cash}, wartość pozycji: {PositionsValue}, razem: {TotalValue}";
 
     
-    private static void ValidateQuantity(int quantity)
-    {
+    private static void ValidateQuantity(int quantity) {
         if (quantity <= 0) throw new ArgumentException("Quantity must be positive.");
     }
 }
