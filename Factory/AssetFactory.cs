@@ -3,9 +3,11 @@ using MarketFlowCLI.Model;
 namespace MarketFlowCLI.Factory;
 
 
+// Fabryka aktywów centralizuje tworzenie obiektów Stock/Crypto/ETF
 public static class AssetFactory
 {
-    
+
+    // Tworzy aktywa odpowiedniego podtypu na podstawie AssetType
     public static Asset Create(AssetType type, string symbol, string name, Money price)
     {
         return type switch
@@ -17,7 +19,7 @@ public static class AssetFactory
         };
     }
 
-    
+    // Zwraca predefiniowaną listę aktywów demo używaną przy starcie aplikacji
     public static IReadOnlyList<Asset> CreateDemoAssets()
     {
         return new List<Asset>
